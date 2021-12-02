@@ -1,5 +1,5 @@
-resource "aws_s3_bucket" "exposed_bucket" {
-  bucket = "accidently_exposed"
+resource "aws_s3_bucket" "exposedbucket" {
+  bucket = "accidentlyexposed"
   acl    = "public-read"
 
   tags = {
