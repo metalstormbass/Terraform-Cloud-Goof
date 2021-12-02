@@ -47,7 +47,7 @@ variable "source_ip" {
 
 #AMI - You must adjust this based on the region you're in
 variable "ubuntu_ami" {
-  default = "ami-06b263d6ceff0b3dd"
+  default = "ami-002068ed284fb165b"
 }
 
 
