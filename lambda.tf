@@ -11,7 +11,7 @@ resource "aws_sns_topic" "mike_sns_topic" {
 resource "aws_sns_topic_subscription" "mike_sns_topic_subscription" {
   topic_arn              = join("", aws_sns_topic.mike_sns_topic.*.arn)
   protocol               = "email"
-  endpoint               = ""
+  endpoint               = var.email
 }
 
 #IAM Role for Lambda Function
@@ -41,7 +41,7 @@ data "aws_iam_policy_document" "mike_lambda_iam" {
             "sns:*",
         ]
         resources = [
-            aws_sns_topic.mike_sns_topic.*.arn,
+            "*"
         ]
     }
 }
@@ -88,7 +88,7 @@ resource "aws_lambda_function" "mike_lambda" {
 
   source_code_hash = data.archive_file.lambda_code.output_base64sha256
 
-  role = aws_iam_role.mike_vuln_lambda_role.arn
+  role = aws_iam_role.mike_lambda_exec.arn
    environment {
         variables = {
         SNS_ARN = aws_sns_topic.mike_sns_topic.arn
@@ -100,6 +100,28 @@ resource "aws_cloudwatch_log_group" "mike_lambda_cw_group" {
   name = "/aws/lambda/${aws_lambda_function.mike_lambda.function_name}"
 
   retention_in_days = 30
+}
+
+resource "aws_iam_role" "mike_lambda_exec" {
+  name = "serverless_lambda"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Sid    = ""
+      Principal = {
+        Service = "lambda.amazonaws.com"
+      }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "mike_lambda_policy_attachment" {
+  role       = aws_iam_role.mike_lambda_exec.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 # API Gateway
@@ -163,6 +185,7 @@ resource "aws_lambda_permission" "mike_api_gw_permissions" {
 
   source_arn = "${aws_apigatewayv2_api.mike_lambda_apigw.execution_arn}/*/*"
 }
+
 
 #Output
 output "base_url" {
