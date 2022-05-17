@@ -96,7 +96,7 @@ resource "aws_lambda_function" "mike_lambda" {
     }
 }
 
-resource "aws_cloudwatch_log_group" "hello_world" {
+resource "aws_cloudwatch_log_group" "mike_lambda_cw_group" {
   name = "/aws/lambda/${aws_lambda_function.mike_lambda.function_name}"
 
   retention_in_days = 30
@@ -143,7 +143,7 @@ resource "aws_apigatewayv2_integration" "mike_lambda_apigw_integration" {
 }
 
 resource "aws_apigatewayv2_route" "mike_api_gw_route" {
-  api_id = aws_apigatewayv2_api.lambda.id
+  api_id = aws_apigatewayv2_api.mike_lambda.id
 
   route_key = "GET /"
   target    = "integrations/${aws_apigatewayv2_integration.mike_lambda_apigw_integration.id}"
@@ -161,7 +161,7 @@ resource "aws_lambda_permission" "mike_api_gw_permissions" {
   function_name = aws_lambda_function.mike_lambda.function_name
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "${aws_apigatewayv2_api.mike_lambda.execution_arn}/*/*"
+  source_arn = "${aws_apigatewayv2_api.mike_lambda_apigw.execution_arn}/*/*"
 }
 
 #Output
