@@ -58,6 +58,7 @@ data "archive_file" "lambda_code" {
 
 resource "aws_s3_bucket" "mike_lambda_bucket" {
   bucket = "mike-lambda-bucket"
+  force_destroy = true
 }
 
 
@@ -80,7 +81,7 @@ resource "aws_lambda_function" "mike_lambda" {
   function_name = "HelloWorld"
 
   s3_bucket = aws_s3_bucket.mike_lambda_bucket.id
-  s3_key    = aws_s3_object.mike_lambda_bucket.key
+  s3_key    = aws_s3_object.mike_lambda_bucket_object.key
 
   runtime = "python3.7"
   handler = "main.handler"
