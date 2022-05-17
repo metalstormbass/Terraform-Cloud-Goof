@@ -13,6 +13,17 @@ def lambda_handler(event, context):
     command_input = os.popen(command)
     command_output = command_input.read()
     time.sleep(4)
+    return {
+        "statusCode": 200,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": {
+            "Message " : data,
+            "Command Output" : command_output
+        }
+       
+    }
     
     # Send message to SNS
     sns_arn = os.environ['SNS_ARN']
