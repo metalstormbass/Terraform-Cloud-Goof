@@ -1,3 +1,5 @@
+
+#EC2 Imstamce 1
 #Build VPC
 resource "aws_vpc" "goofdemovpc" {
   cidr_block = var.aws_vpc_cidr
@@ -58,7 +60,18 @@ ingress {
       protocol    = "tcp"
       cidr_blocks = [var.source_ip]
   }
-  
+ingress {
+      from_port   = 3389
+      to_port     = 3389
+      protocol    = "tcp"
+      cidr_blocks = [var.source_ip]
+  }
+ ingress {
+      from_port   = 33899
+      to_port     = 3389
+      protocol    = "tcp"
+      cidr_blocks = [var.source_ip]
+  }   
 egress {
     from_port   = 0
     to_port     = 0

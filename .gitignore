@@ -1,3 +1,6 @@
 .dccache
 .terraform
 .terraform.lock.hcl
+tf.plan
+tf-plan.json
+tfplan.binary
