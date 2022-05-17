@@ -2,7 +2,7 @@
 resource "aws_sns_topic" "mike_sns_topic" {
   name                        = "mike_sns_topic"
   display_name                = "MikeSNSTopic"
-  endpoint                    = ""
+
   tags =  {
     ENV = "MikeDemo"
   }
@@ -11,6 +11,7 @@ resource "aws_sns_topic" "mike_sns_topic" {
 resource "aws_sns_topic_subscription" "mike_sns_topic_subscription" {
   topic_arn              = join("", aws_sns_topic.mike_sns_topic.*.arn)
   protocol  = "Email"
+  endpoint                    = ""
 }
 
 #IAM Role for Lambda Function
@@ -57,6 +58,12 @@ data "archive_file" "lambda_code" {
 
 resource "aws_s3_bucket" "mike_lambda_bucket" {
   bucket = "mike-lambda-bucket"
+
+}
+
+
+resource "aws_s3_object" "mike_lambda_bucket_object" {
+  bucket = aws_s3_bucket.mike_lambda_bucket
   force_destroy = true
   key    = "lambda_code.zip"
   source = data.archive_file.lambda_code.output_path

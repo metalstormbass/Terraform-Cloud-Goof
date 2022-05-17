@@ -14,7 +14,6 @@ resource "aws_s3_bucket_acl" "exposedbucket_acl" {
 
 resource "aws_s3_bucket" "intentionallyexposedbucket" {
   bucket = "intentionallylyexposed"
-  acl    = "public-read"
 
   tags = {
     Name        = "Intentionally Exposed Bucket"
