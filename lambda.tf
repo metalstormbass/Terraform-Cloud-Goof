@@ -2,7 +2,7 @@
 resource "aws_sns_topic" "mike_sns_topic" {
   name                        = "mike_sns_topic"
   display_name                = "MikeSNSTopic"
-
+  endpoint                    = ""
   tags =  {
     ENV = "MikeDemo"
   }
@@ -55,7 +55,7 @@ data "archive_file" "lambda_code" {
   output_path = "${path.module}/lambda_code.zip"
 }
 
-resource "aws_s3_object" "mike_lambda_bucket" {
+resource "aws_s3_bucket" "mike_lambda_bucket" {
   bucket = "mike-lambda-bucket"
   force_destroy = true
   key    = "lambda_code.zip"
@@ -135,7 +135,7 @@ resource "aws_apigatewayv2_integration" "mike_lambda_apigw_integration" {
   integration_method = "ANY"
 }
 
-resource "aws_apigatewayv2_route" "hello_world" {
+resource "aws_apigatewayv2_route" "mike_api_gw_route" {
   api_id = aws_apigatewayv2_api.lambda.id
 
   route_key = "GET /"
@@ -143,7 +143,7 @@ resource "aws_apigatewayv2_route" "hello_world" {
 }
 
 resource "aws_cloudwatch_log_group" "mike_api_gw_cw" {
-  name = "/aws/api_gw/${aws_apigatewayv2_api.lambda.name}"
+  name = "/aws/api_gw/${aws_apigatewayv2_api.mike_lambda_apigw.name}"
 
   retention_in_days = 30
 }
@@ -161,5 +161,5 @@ resource "aws_lambda_permission" "mike_api_gw_permissions" {
 output "base_url" {
   description = "Base URL for API Gateway stage."
 
-  value = aws_apigatewayv2_stage.lambda.invoke_url
+  value = aws_apigatewayv2_stage.mike_lambda_apigw_stage.invoke_url
 }
