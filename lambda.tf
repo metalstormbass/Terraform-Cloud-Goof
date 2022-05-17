@@ -46,13 +46,9 @@ data "aws_iam_policy_document" "mike_lambda_iam" {
 }
 
 #Lambda Function S3 Bucket
-resource "mike_lambda_bucket" "lambda_bucket_name" {
-  prefix = "learn-terraform-functions"
-  length = 4
-}
 
 resource "aws_s3_bucket" "mike_lambda_bucket" {
-  bucket = mike_lambda_bucket.lambda_bucket_name.id
+  bucket = "mike-lambda-bucket"
   acl           = "private"
   force_destroy = true
 }
