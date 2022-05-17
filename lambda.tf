@@ -161,7 +161,7 @@ resource "aws_apigatewayv2_integration" "mike_lambda_apigw_integration" {
 
   integration_uri    = aws_lambda_function.mike_lambda.invoke_arn
   integration_type   = "AWS_PROXY"
-  integration_method = "ANY"
+  integration_method = "POST"
 }
 
 resource "aws_apigatewayv2_route" "mike_api_gw_route" {
