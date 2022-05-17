@@ -84,7 +84,7 @@ resource "aws_lambda_function" "mike_lambda" {
   s3_key    = aws_s3_object.mike_lambda_bucket_object.key
 
   runtime = "python3.7"
-  handler = "main.handler"
+  handler = "main.lambda_handler"
 
   source_code_hash = data.archive_file.lambda_code.output_base64sha256
 
