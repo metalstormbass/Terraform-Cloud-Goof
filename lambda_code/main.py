@@ -19,7 +19,7 @@ def lambda_handler(event, context):
     sns_client = boto3.client('sns')
     sns_client.publish(
     TopicArn = sns_arn,
-    Subject = 'Check Point Serverless Test',
+    Subject = 'Snyk Serverless Test',
              Message = "This is the information sent to the Lambda Function: " + data + " The output of the command: " +command+ " is: " + str(command_output)
              
     )

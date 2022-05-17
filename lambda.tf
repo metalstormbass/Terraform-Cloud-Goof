@@ -78,7 +78,7 @@ resource "aws_s3_bucket_acl" "mike_lambda_bucket_acl" {
 
 #Lambda Function
 resource "aws_lambda_function" "mike_lambda" {
-  function_name = "HelloWorld"
+  function_name = "MikeFunction"
 
   s3_bucket = aws_s3_bucket.mike_lambda_bucket.id
   s3_key    = aws_s3_object.mike_lambda_bucket_object.key
