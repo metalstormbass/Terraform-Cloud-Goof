@@ -143,7 +143,7 @@ resource "aws_apigatewayv2_integration" "mike_lambda_apigw_integration" {
 }
 
 resource "aws_apigatewayv2_route" "mike_api_gw_route" {
-  api_id = aws_apigatewayv2_api.mike_lambda.id
+  api_id = aws_apigatewayv2_api.mike_lambda_apigw.id
 
   route_key = "GET /"
   target    = "integrations/${aws_apigatewayv2_integration.mike_lambda_apigw_integration.id}"
