@@ -1,6 +1,6 @@
 #SNS Topic for Lambda Function
 resource "aws_sns_topic" "mike_sns_topic" {
-  name                        = mike_sns_topic
+  name                        = "mike_sns_topic"
   display_name                = "MikeSNSTopic"
 
   tags =  {
@@ -47,11 +47,6 @@ data "aws_iam_policy_document" "mike_lambda_iam" {
 
 #Lambda Function S3 Bucket
 
-resource "aws_s3_bucket" "mike_lambda_bucket" {
-  bucket = "mike-lambda-bucket"
-  acl           = "private"
-  force_destroy = true
-}
 
 data "archive_file" "lambda_code" {
   type = "zip"
@@ -61,17 +56,21 @@ data "archive_file" "lambda_code" {
 }
 
 resource "aws_s3_object" "mike_lambda_bucket" {
-  bucket = aws_s3_bucket.lambda_bucket.id
-
+  bucket = "mike-lambda-bucket"
+  force_destroy = true
   key    = "lambda_code.zip"
   source = data.archive_file.lambda_code.output_path
 
   etag = filemd5(data.archive_file.lambda_code.output_path)
 }
 
+resource "aws_s3_bucket_acl" "mike_lambda_bucket_acl" {
+  bucket = aws_s3_bucket.mike_lambda_bucket.id
+  acl    = "private"
+}
 
 #Lambda Function
-resource "aws_lambda_function" "mike_lamba" {
+resource "aws_lambda_function" "mike_lambda" {
   function_name = "HelloWorld"
 
   s3_bucket = aws_s3_bucket.mike_lambda_bucket.id
@@ -155,7 +154,7 @@ resource "aws_lambda_permission" "mike_api_gw_permissions" {
   function_name = aws_lambda_function.mike_lambda.function_name
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "${aws_apigatewayv2_api.lambda.execution_arn}/*/*"
+  source_arn = "${aws_apigatewayv2_api.mike_lambda.execution_arn}/*/*"
 }
 
 #Output
