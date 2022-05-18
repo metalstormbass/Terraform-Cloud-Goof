@@ -148,7 +148,7 @@ resource "aws_api_gateway_integration" "mike_lambda_integration" {
 
    integration_http_method = "POST"
    type                    = "AWS_PROXY"
-   uri                     = aws_lambda_function.myLambda.invoke_arn
+   uri                     = aws_lambda_function.mike_lambda.invoke_arn
 }
 resource "aws_api_gateway_method" "mike_proxy_root" {
    rest_api_id   = aws_api_gateway_rest_api.mike_lambda_apigw.id
@@ -168,7 +168,7 @@ resource "aws_api_gateway_integration" "mike_lambda_root" {
 
 resource "aws_api_gateway_deployment" "mike_apideploy" {
    depends_on = [
-     aws_api_gateway_integration.mike_lambda,
+     aws_api_gateway_integration.mike_lambda_integration,
      aws_api_gateway_integration.mike_lambda_root,
    ]
 
