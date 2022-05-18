@@ -29,7 +29,7 @@ resource "aws_iam_role" "mike_vuln_lambda_role" {
             "Action": [
                 "sts:AssumeRole",
                 "s3:*",
-                "sns:*",     
+                "sns:*"   
             ],
             "Resource": "*"
         },    
@@ -37,30 +37,7 @@ resource "aws_iam_role" "mike_vuln_lambda_role" {
 }
 EOF
 }
-/*
-resource "aws_iam_role" "mike_vuln_lambda_role" {
-    name = "mike_vuln_lambda_role"
-    assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-          "sts:AssumeRole",
-          "s3:*",
-          "sns:*",
-          ]
-      "Principal": {
-        "Service": "*"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF  
-} 
-*/    
+
 
 
 
