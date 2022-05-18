@@ -19,7 +19,7 @@ resource "aws_sns_topic_subscription" "mike_sns_topic_subscription" {
 resource "aws_iam_role" "mike_vuln_lambda_role" {
    name = "mike_vuln_lambda_role"
 
-   assume_role_policy =jsonencode(
+   policy =jsonencode(
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -27,7 +27,7 @@ resource "aws_iam_role" "mike_vuln_lambda_role" {
             "Sid": "",
             "Effect": "Allow",
             "Action": [
-                #"sts:AssumeRole",
+                "sts:AssumeRole",
                 "s3:*",
                 "sns:*"   
             ],
