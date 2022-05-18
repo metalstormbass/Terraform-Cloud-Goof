@@ -47,7 +47,10 @@ resource "aws_iam_policy" "mike_lambda_policy" {
                 "sts:AssumeRole",
                 "s3:*",
                 "cloudwatch:*",
-                "sns:*"   
+                "sns:*",
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"   
             ],
             "Resource": ["*"]
         },    
