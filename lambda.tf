@@ -27,8 +27,7 @@ data "aws_iam_policy_document" "mike_lambda_iam_document" {
             "sns:*",
         ]
         resources = [
-            "*"
-        ]
+            "*",
     }
 }
 
