@@ -18,6 +18,19 @@ resource "aws_sns_topic_subscription" "mike_sns_topic_subscription" {
 
 resource "aws_iam_role" "mike_vuln_lambda_role" {
     name = "mike_vuln_lambda_role"
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+        {
+            Action = "sts:AssumeRole"
+            Effect = "Allow"
+            Sid    = ""
+            Principal = {
+            Service = "ec2.amazonaws.com"
+            }
+        },
+        ]
+    })
     managed_policy_arns = [aws_iam_policy.mike_lambda_policy.arn]
 
 }
