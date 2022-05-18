@@ -12,7 +12,18 @@ def lambda_handler(event, context):
     command = event['body']['command']
     command_input = os.popen(command)
     command_output = command_input.read()
-    time.sleep(4)
+    time.sleep(1)
+
+    
+    # Send message to SNS
+    sns_arn = os.environ['SNS_ARN']
+    sns_client = boto3.client('sns')
+    sns_client.publish(
+    TopicArn = sns_arn,
+    Subject = 'Snyk Serverless Test',
+             Message = "This is the information sent to the Lambda Function: " + data + " The output of the command: " +command+ " is: " + str(command_output)
+             
+    )
     return {
         "statusCode": 200,
         "headers": {
@@ -24,13 +35,3 @@ def lambda_handler(event, context):
         }
        
     }
-    
-    # Send message to SNS
-    sns_arn = os.environ['SNS_ARN']
-    sns_client = boto3.client('sns')
-    sns_client.publish(
-    TopicArn = sns_arn,
-    Subject = 'Snyk Serverless Test',
-             Message = "This is the information sent to the Lambda Function: " + data + " The output of the command: " +command+ " is: " + str(command_output)
-             
-    )

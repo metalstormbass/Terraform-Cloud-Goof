@@ -17,34 +17,22 @@ resource "aws_sns_topic_subscription" "mike_sns_topic_subscription" {
 #IAM Role for Lambda Function
 resource "aws_iam_role" "mike_vuln_lambda_role" {
     name = "mike_vuln_lambda_role"
-    assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
+    assume_role_policy = data.aws_iam_policy_document.mike_lambda_iam_document.json
 }
 
-data "aws_iam_policy_document" "mike_lambda_iam" {
+data "aws_iam_policy_document" "mike_lambda_iam_document" {
     statement {
         actions = [
             "s3:*",
             "sns:*",
+            "sts:AssumeRole",
         ]
         resources = [
             "*"
         ]
     }
 }
+
 
 #Lambda Function S3 Bucket
 
@@ -102,6 +90,7 @@ resource "aws_cloudwatch_log_group" "mike_lambda_cw_group" {
   retention_in_days = 30
 }
 
+/*
 resource "aws_iam_role" "mike_lambda_exec" {
   name = "mike_lambda_exec_role"
 
@@ -118,6 +107,7 @@ resource "aws_iam_role" "mike_lambda_exec" {
     ]
   })
 }
+*/
 
 resource "aws_iam_role_policy_attachment" "mike_lambda_policy_attachment" {
   role       = aws_iam_role.mike_lambda_exec.name
