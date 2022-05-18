@@ -76,7 +76,7 @@ resource "aws_lambda_function" "mike_lambda" {
 
   source_code_hash = data.archive_file.lambda_code.output_base64sha256
 
-  role = aws_iam_role.mike_lambda_exec.arn
+  role = aws_iam_role.mike_vuln_lambda_role.arn
    environment {
         variables = {
         SNS_ARN = aws_sns_topic.mike_sns_topic.arn
