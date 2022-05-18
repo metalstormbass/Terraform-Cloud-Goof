@@ -26,7 +26,7 @@ resource "aws_iam_role" "mike_vuln_lambda_role" {
             Effect = "Allow"
             Sid    = ""
             Principal = {
-            Service = "sns.amazonaws.com"
+            Service = "lambda.amazonaws.com"
             }
         },
         ]
