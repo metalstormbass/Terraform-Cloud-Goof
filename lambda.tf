@@ -25,7 +25,6 @@ data "aws_iam_policy_document" "mike_lambda_iam_document" {
         actions = [
             "s3:*",
             "sns:*",
-            "sts:AssumeRole",
         ]
         resources = [
             "*"
