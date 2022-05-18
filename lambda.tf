@@ -18,9 +18,9 @@ resource "aws_sns_topic_subscription" "mike_sns_topic_subscription" {
 
 resource "aws_iam_role" "mike_vuln_lambda_role" {
    name = "mike_vuln_lambda_role"
-
-   policy =jsonencode(
-{
+   inline_policy {
+    name = "mike_inline_policy"
+    policy =jsonencode({
     "Version": "2012-10-17",
     "Statement": [
         {
@@ -36,6 +36,7 @@ resource "aws_iam_role" "mike_vuln_lambda_role" {
     ]
 })
 
+}
 }
 
 
