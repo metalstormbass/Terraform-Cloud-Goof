@@ -29,7 +29,7 @@ resource "aws_iam_role" "mike_vuln_lambda_role" {
                 "s3:*",
                 "sns:*"   
             ],
-            "Resource": "*"
+            "Resource": ["*"],
         },    
     ]
 })
