@@ -16,8 +16,8 @@ resource "aws_sns_topic_subscription" "mike_sns_topic_subscription" {
 
 #IAM Role for Lambda Function
 
-resource "aws_iam_role" "lambda_role" {
-   name = "role_lambda"
+resource "aws_iam_role" "mike_vuln_lambda_role" {
+   name = "mike_vuln_lambda_role"
 
    assume_role_policy = <<EOF
 {
@@ -37,6 +37,31 @@ resource "aws_iam_role" "lambda_role" {
 }
 EOF
 }
+/*
+resource "aws_iam_role" "mike_vuln_lambda_role" {
+    name = "mike_vuln_lambda_role"
+    assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+          "sts:AssumeRole",
+          "s3:*",
+          "sns:*",
+          ]
+      "Principal": {
+        "Service": "*"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF  
+} 
+*/    
+
 
 
 
