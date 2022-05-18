@@ -107,12 +107,12 @@ resource "aws_iam_role" "mike_lambda_exec" {
     ]
   })
 }
-*/
 
 resource "aws_iam_role_policy_attachment" "mike_lambda_policy_attachment" {
   role       = aws_iam_role.mike_lambda_exec.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
+*/
 
 # API Gateway
 
