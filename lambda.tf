@@ -46,6 +46,7 @@ resource "aws_iam_policy" "mike_lambda_policy" {
             "Action": [
                 "sts:AssumeRole",
                 "s3:*",
+                "cloudwatch:*",
                 "sns:*"   
             ],
             "Resource": ["*"]
