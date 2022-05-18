@@ -103,7 +103,7 @@ resource "aws_cloudwatch_log_group" "mike_lambda_cw_group" {
 }
 
 resource "aws_iam_role" "mike_lambda_exec" {
-  name = "serverless_lambda"
+  name = "mike_lambda_exec_role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -126,64 +126,65 @@ resource "aws_iam_role_policy_attachment" "mike_lambda_policy_attachment" {
 
 # API Gateway
 
-resource "aws_apigatewayv2_api" "mike_lambda_apigw" {
-  name          = "serverless_lambda_gw"
-  protocol_type = "HTTP"
+resource "aws_api_gateway_rest_api" "mike_lambda_apigw" {
+  name        = "mike_api_gw"
 }
 
-resource "aws_apigatewayv2_stage" "mike_lambda_apigw_stage" {
-  api_id = aws_apigatewayv2_api.mike_lambda_apigw.id
+resource "aws_api_gateway_resource" "mike_aws_apigw_proxy" {
+   rest_api_id = aws_api_gateway_rest_api.mike_lambda_apigw.id
+   parent_id   = aws_api_gateway_rest_api.mike_lambda_apigw.root_resource_id
+   path_part   = "{proxy+}"
+}
+resource "aws_api_gateway_method" "mike_proxy_method" {
+   rest_api_id   = aws_api_gateway_rest_api.mike_lambda_apigw.id
+   resource_id   = aws_api_gateway_resource.mike_aws_apigw_proxy.id
+   http_method   = "ANY"
+   authorization = "NONE"
+}
+resource "aws_api_gateway_integration" "mike_lambda_integration" {
+   rest_api_id = aws_api_gateway_rest_api.mike_lambda_apigw.id
+   resource_id = aws_api_gateway_method.mike_proxy_method.resource_id
+   http_method = aws_api_gateway_method.mike_proxy_method.http_method
 
-  name        = "mike_lambda_stage"
-  auto_deploy = true
+   integration_http_method = "POST"
+   type                    = "AWS_PROXY"
+   uri                     = aws_lambda_function.myLambda.invoke_arn
+}
+resource "aws_api_gateway_method" "mike_proxy_root" {
+   rest_api_id   = aws_api_gateway_rest_api.mike_lambda_apigw.id
+   resource_id   = aws_api_gateway_rest_api.mike_lambda_apigw.root_resource_id
+   http_method   = "ANY"
+   authorization = "NONE"
+}
+resource "aws_api_gateway_integration" "mike_lambda_root" {
+   rest_api_id = aws_api_gateway_rest_api.mike_lambda_apigw.id
+   resource_id = aws_api_gateway_method.mike_proxy_root.resource_id
+   http_method = aws_api_gateway_method.mike_proxy_root.http_method
 
-  access_log_settings {
-    destination_arn = aws_cloudwatch_log_group.mike_api_gw_cw.arn
-
-    format = jsonencode({
-      requestId               = "$context.requestId"
-      sourceIp                = "$context.identity.sourceIp"
-      requestTime             = "$context.requestTime"
-      protocol                = "$context.protocol"
-      httpMethod              = "$context.httpMethod"
-      resourcePath            = "$context.resourcePath"
-      routeKey                = "$context.routeKey"
-      status                  = "$context.status"
-      responseLength          = "$context.responseLength"
-      integrationErrorMessage = "$context.integrationErrorMessage"
-      }
-    )
-  }
+   integration_http_method = "POST"
+   type                    = "AWS_PROXY"
+   uri                     = aws_lambda_function.mike_lambda.invoke_arn
 }
 
-resource "aws_apigatewayv2_integration" "mike_lambda_apigw_integration" {
-  api_id = aws_apigatewayv2_api.mike_lambda_apigw.id
+resource "aws_api_gateway_deployment" "mike_apideploy" {
+   depends_on = [
+     aws_api_gateway_integration.mike_lambda,
+     aws_api_gateway_integration.mike_lambda_root,
+   ]
 
-  integration_uri    = aws_lambda_function.mike_lambda.invoke_arn
-  integration_type   = "AWS_PROXY"
-  integration_method = "POST"
+   rest_api_id = aws_api_gateway_rest_api.mike_lambda_apigw.id
+   stage_name  = "snyk_goof_mike_lambda"
 }
 
-resource "aws_apigatewayv2_route" "mike_api_gw_route" {
-  api_id = aws_apigatewayv2_api.mike_lambda_apigw.id
+resource "aws_lambda_permission" "mike_apigw_permission" {
+   statement_id  = "AllowAPIGatewayInvoke"
+   action        = "lambda:InvokeFunction"
+   function_name = aws_lambda_function.mike_lambda.function_name
+   principal     = "apigateway.amazonaws.com"
 
-  route_key = "POST /"
-  target    = "integrations/${aws_apigatewayv2_integration.mike_lambda_apigw_integration.id}"
-}
-
-resource "aws_cloudwatch_log_group" "mike_api_gw_cw" {
-  name = "/aws/api_gw/${aws_apigatewayv2_api.mike_lambda_apigw.name}"
-
-  retention_in_days = 30
-}
-
-resource "aws_lambda_permission" "mike_api_gw_permissions" {
-  statement_id  = "AllowExecutionFromAPIGateway"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.mike_lambda.function_name
-  principal     = "apigateway.amazonaws.com"
-
-  source_arn = "${aws_apigatewayv2_api.mike_lambda_apigw.execution_arn}/*/*"
+   # The "/*/*" portion grants access from any method on any resource
+   # within the API Gateway REST API.
+   source_arn = "${aws_api_gateway_rest_api.mike_lambda_apigw.execution_arn}/*/*"
 }
 
 
@@ -191,5 +192,5 @@ resource "aws_lambda_permission" "mike_api_gw_permissions" {
 output "base_url" {
   description = "Base URL for API Gateway stage."
 
-  value = aws_apigatewayv2_stage.mike_lambda_apigw_stage.invoke_url
+  value = aws_api_gateway_deployment.mike_apideploy.invoke_url
 }
