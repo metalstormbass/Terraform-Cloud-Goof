@@ -7,15 +7,13 @@ def lambda_handler(event, context):
     #Parse event
     if type(event['body']) == str:
         body = json.loads(event['body'])
-        data = "str" #(body['body']['data'])
-        command ="ls" #(body['body']['command'])
-    elif type(event['body']) == dict:    
+        data = (body['body']['data'])
+        command = (body['body']['command'])
+    else:   
         body = event['body']
         data = body['data']
         command = body['command']
-    else:
-        data = "infunction"
-        command = "ls .."
+
     command_input = os.popen(command)
     command_output = command_input.read()
     time.sleep(1)
