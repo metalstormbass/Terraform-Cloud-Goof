@@ -7,8 +7,8 @@ def lambda_handler(event, context):
     #Parse event
     if type(event['body']) == str:
         body = json.loads(event['body'])
-        data = (body['body']['data'])
-        command = (body['body']['command'])
+        data = body['data']
+        command = body['command']
     else:   
         body = event['body']
         data = body['data']
