@@ -3,13 +3,12 @@ import os
 import boto3
 import time 
 
-
-
-
 def lambda_handler(event, context):
     #Parse event
-    data = event['body']['data']
-    command = event['body']['command']
+    print (event)
+    body = json.loads(event['body'])
+    data = (body['body']['data'])
+    command =(body['body']['command'])
     command_input = os.popen(command)
     command_output = command_input.read()
     time.sleep(1)
@@ -25,13 +24,14 @@ def lambda_handler(event, context):
              
     )
     return {
+        "isBase64Encoded": "false",
         "statusCode": 200,
         "headers": {
             "Content-Type": "application/json"
         },
-        "body": {
+        "body": json.dumps({
             "Message " : data,
             "Command Output" : command_output
-        }
+        })
        
     }
