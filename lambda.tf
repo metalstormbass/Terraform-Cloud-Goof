@@ -147,7 +147,7 @@ resource "aws_api_gateway_rest_api" "mike_lambda_apigw" {
 resource "aws_api_gateway_resource" "mike_aws_apigw_proxy" {
    rest_api_id = aws_api_gateway_rest_api.mike_lambda_apigw.id
    parent_id   = aws_api_gateway_rest_api.mike_lambda_apigw.root_resource_id
-   path_part   = "/"
+   path_part   = "{proxy+}"
 }
 resource "aws_api_gateway_method" "mike_proxy_method" {
    rest_api_id   = aws_api_gateway_rest_api.mike_lambda_apigw.id
