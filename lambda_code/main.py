@@ -5,10 +5,17 @@ import time
 
 def lambda_handler(event, context):
     #Parse event
-    print (event)
-    body = json.loads(event['body'])
-    data = (body['body']['data'])
-    command =(body['body']['command'])
+    if type(event['body']) == str:
+        body = json.loads(event['body'])
+        data = "str" #(body['body']['data'])
+        command ="ls" #(body['body']['command'])
+    elif type(event['body']) == dict:    
+        body = event['body']
+        data = body['data']
+        command = body['command']
+    else:
+        data = "infunction"
+        command = "ls .."
     command_input = os.popen(command)
     command_output = command_input.read()
     time.sleep(1)
@@ -23,6 +30,7 @@ def lambda_handler(event, context):
              Message = "This is the information sent to the Lambda Function: " + data + " The output of the command: " +command+ " is: " + str(command_output)
              
     )
+
     return {
         "isBase64Encoded": "false",
         "statusCode": 200,
@@ -30,8 +38,9 @@ def lambda_handler(event, context):
             "Content-Type": "application/json"
         },
         "body": json.dumps({
-            "Message " : data,
+            "Message " : data ,
             "Command Output" : command_output
         })
        
     }
+

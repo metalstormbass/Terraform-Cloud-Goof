@@ -1,4 +1,5 @@
 import requests
+import json
 
 #remove https warning
 requests.packages.urllib3.disable_warnings()
@@ -8,7 +9,8 @@ def post(target, user_input, command):
             'content-type': "application/json",
             'Accept': "*/*",
         }
-   response = requests.post(target, data={'data' : user_input, 'command' : command},verify=False)
+   data = json.dumps({"data" : user_input, "command" : command})
+   response = requests.post(target, headers=headers, data=data,verify=False)
    print (response.content)
 
 #Input target
