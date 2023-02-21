@@ -47,7 +47,7 @@ jobs:
 
     # Pull Terraform State file for inspection by Snyk
     - name: Terraform state pull
-      run: terraform state pull > tfcloud.tfstate
+      run: terraform state pull > tfcloud.tfstate && head tfcloud.tfstate
 
     ### Snyk iac capture
     - name: Setup Snyk capture cli
