@@ -5,16 +5,23 @@ variable "victim_company" {
   default     = "goofdemo"
 }
 
+#Owner CHANGE THIS
+variable "owner" {
+  type        = string
+  description = "For Tagging and Filtering purposes"
+  default     = "Mike"
+}
+
 #AWS Region
 variable "aws_region" {
   description = "AWS region to launch servers."
-  default     = "us-east-2"
+  default     = "canada-central-1"
 }
 
 #AWS AZ
 variable "primary_az" {
   description = "primary AZ"
-  default     = "us-east-2a"
+  default     = "canada-central-1a"
 }
 
 #AWS VPC CIDR

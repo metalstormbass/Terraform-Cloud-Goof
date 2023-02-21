@@ -16,12 +16,14 @@ resource "aws_instance" "vuln_vm" {
   key_name = var.key_name
   network_interface {
         device_index = 0
-        network_interface_id = aws_network_interface.goof-nic.id
+        network_interface_id = aws_network_interface.tfgoof-nic.id
   }
   
   user_data = data.template_file.userdata_setup.rendered
   tags = {
-    Environment = "dev"
+   Environment = "DEV"
+   Owner = var.owner
+
   }
 }
 

@@ -1,0 +1,85 @@
+name: 'Deploy Terraform'
+on:
+  push:
+    branches:
+    - main
+jobs: 
+  #Setup Environment
+  deploy_terraform:
+    name: 'deploy_terraform'
+    runs-on: ubuntu-latest
+    env:
+    
+    # Following env variables are needed for snyk-iac-capture
+     SNYK_IAC_CAPTURE_API_REST_URL: https://api.snyk.io
+     SNYK_IAC_CAPTURE_API_REST_TOKEN: ${{ secrets.SNYK_TOKEN }} 
+     SNYK_IAC_CAPTURE_ORG: ${{ secrets.SNYK_ORG}} 
+
+    defaults:
+      run:
+        shell: bash
+        
+    #Checkout Code    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    # Insert Organization + Workspace into main.tf
+    - name: Insert Environment Name
+      run: |
+            sed -i "/organization/c\   organization\ = \"${{ secrets.TF_ORGANIZATION }}\"" main.tf 
+            sed -i "/name/c\   name\ = \"${{ secrets.TF_WORKSPACE }}\"" main.tf
+            
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        cli_config_credentials_token: ${{ secrets.TERRAFORM_API_KEY }}
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init
+      run: terraform init
+
+    # Generates an execution plan for Terraform
+    - name: Terraform Plan
+      run: terraform plan
+
+    # Pull Terraform State file for inspection by Snyk
+     - name: Terraform state pull
+       run: terraform state pull > tfcloud.tfstate
+
+    # On push to master, build or change infrastructure according to Terraform configuration files
+    # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
+    - name: Terraform Apply
+      run: terraform apply -auto-approve
+
+
+    ### Snyk iac capture
+     - name: Setup Snyk capture cli
+       shell: bash
+       run: |
+         curl -sSL -o /usr/local/bin/snyk-iac-capture https://static.snyk.io/cli/iac/capture/v0.1.1/snyk-iac-capture_Linux_x86_64
+         chmod +x /usr/local/bin/snyk-iac-capture
+
+     - name: Snyk IAC Capture
+       run: snyk-iac-capture --path tfcloud.tfstate
+
+  ### Kick off Snyk Cloud Rescan
+     - name: Rescan Cloud Environment
+       run : |
+          curl -X POST \
+          'https://api.snyk.io/rest/orgs/5308802e-743b-449b-adde-a1d04befe218/cloud/scans?version=2022-12-21~beta' \
+          -H 'Authorization: token ${{ secrets.SNYK_TOKEN }} \
+          -H "Content-Type:application/vnd.api+json"  -d '{
+            "data": {
+              "relationships": {
+                "environment": {
+                  "data": {
+                    "id": "${{ secrets.SNYK_ORG }}",
+                    "type": "environment"
+                  }
+                }
+              },
+              "type": "resource"
+            }
+          }'
