@@ -57,10 +57,11 @@ jobs:
        sudo chmod +x /usr/local/bin/snyk-iac-capture
 
     - name: Snyk IAC Capture
-      run: snyk-iac-capture --path ./tfcloud.tfstate 
+      run: find . -name tfcloud.tfstate
 
     - name: Snyk IAC Capture
-      run: find . -name tfcloud.tfstate
+      run: snyk-iac-capture --path ./tfcloud.tfstate 
+
 
   ### Kick off Snyk Cloud Rescan
     - name: Rescan Cloud Environment
