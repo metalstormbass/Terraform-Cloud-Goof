@@ -59,6 +59,9 @@ jobs:
     - name: Snyk IAC Capture
       run: snyk-iac-capture --path ./tfcloud.tfstate 
 
+    - name: Snyk IAC Capture
+      run: find . -name tfcloud.tfstate
+
   ### Kick off Snyk Cloud Rescan
     - name: Rescan Cloud Environment
       run : |
