@@ -13,9 +13,6 @@ resource "aws_sns_topic_subscription" "tfgoof_sns_topic_subscription" {
   topic_arn              = join("", aws_sns_topic.tfgoof_sns_topic.*.arn)
   protocol               = "email"
   endpoint               = var.email
-  tags = {
-  Owner = var.owner
-  }
 }
 
 #IAM Role for Lambda Function
@@ -156,18 +153,14 @@ resource "aws_api_gateway_resource" "tfgoof_aws_apigw_proxy" {
    rest_api_id = aws_api_gateway_rest_api.tfgoof_lambda_apigw.id
    parent_id   = aws_api_gateway_rest_api.tfgoof_lambda_apigw.root_resource_id
    path_part   = "{proxy+}"
-  tags = {
-  Owner = var.owner
-  }
+ 
 }
 resource "aws_api_gateway_method" "tfgoof_proxy_method" {
    rest_api_id   = aws_api_gateway_rest_api.tfgoof_lambda_apigw.id
    resource_id   = aws_api_gateway_resource.tfgoof_aws_apigw_proxy.id
    http_method   = "ANY"
    authorization = "NONE"
-  tags = {
-  Owner = var.owner
-  }
+
 }
 resource "aws_api_gateway_integration" "tfgoof_lambda_integration" {
    rest_api_id = aws_api_gateway_rest_api.tfgoof_lambda_apigw.id
@@ -178,19 +171,12 @@ resource "aws_api_gateway_integration" "tfgoof_lambda_integration" {
    type                    = "AWS_PROXY"
    uri                     = aws_lambda_function.tfgoof_lambda.invoke_arn
 
-  tags = {
-  Owner = var.owner
-  }
 }
 resource "aws_api_gateway_method" "tfgoof_proxy_root" {
    rest_api_id   = aws_api_gateway_rest_api.tfgoof_lambda_apigw.id
    resource_id   = aws_api_gateway_rest_api.tfgoof_lambda_apigw.root_resource_id
    http_method   = "ANY"
    authorization = "NONE"
-
-  tags = {
-  Owner = var.owner
-  }
 }
 resource "aws_api_gateway_integration" "tfgoof_lambda_root" {
    rest_api_id = aws_api_gateway_rest_api.tfgoof_lambda_apigw.id
@@ -201,9 +187,6 @@ resource "aws_api_gateway_integration" "tfgoof_lambda_root" {
    type                    = "AWS_PROXY"
    uri                     = aws_lambda_function.tfgoof_lambda.invoke_arn
 
-  tags = {
-  Owner = var.owner
-  }
 }
 
 resource "aws_api_gateway_deployment" "tfgoof_apideploy" {
@@ -230,9 +213,6 @@ resource "aws_lambda_permission" "tfgoof_apigw_permission" {
    # within the API Gateway REST API.
    source_arn = "${aws_api_gateway_rest_api.tfgoof_lambda_apigw.execution_arn}/*/*"
 
-  tags = {
-  Owner = var.owner
-  }
 }
 
 
