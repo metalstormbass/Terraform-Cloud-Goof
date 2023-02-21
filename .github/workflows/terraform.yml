@@ -61,6 +61,7 @@ jobs:
     - name: Run Snyk Report
       run : |
            curl -sSL -o /usr/local/bin/snyk https://static.snyk.io/cli/latest/snyk-linux
+           chmod +x /usr/local/bin/snyk
            snyk iac test --report --target-reference=$(git branch --show-current)
    
     ### Snyk IaC Capture     
