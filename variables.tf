@@ -39,8 +39,8 @@ variable "aws_subnet_cidr" {
 }
 
 #Server Private IP
-variable "goof_private" {
-  description = "goof_private_ip"
+variable "tfgoof_private" {
+  description = "tfgoof_private_ip"
   type        = string
   default     = "10.0.0.10"
 }

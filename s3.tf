@@ -11,9 +11,7 @@ resource "aws_s3_bucket" "exposedbucket" {
 resource "aws_s3_bucket_acl" "exposedbucket_acl" {
   bucket = aws_s3_bucket.exposedbucket.id
   acl    = "public-read"
-  tags = {
-    Owner = var.owner
-  }
+
 }
 
 resource "aws_s3_bucket" "intentionallyexposedbucket" {
@@ -28,7 +26,4 @@ resource "aws_s3_bucket" "intentionallyexposedbucket" {
 resource "aws_s3_bucket_acl" "intentionallyexposedbucket_acl" {
   bucket = aws_s3_bucket.intentionallyexposedbucket.id
   acl    = "public-read"
-  tags = {
-    Owner = var.owner
-  }
 }

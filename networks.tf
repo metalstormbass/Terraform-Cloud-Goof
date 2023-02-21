@@ -51,10 +51,6 @@ resource "aws_route_table" "tfgoof_route_table" {
 resource "aws_route_table_association" "tfgoof_route_association" {
     subnet_id = aws_subnet.external.id
     route_table_id = aws_route_table.tfgoof_route_table.id
-
-    tags = {
-    Owner = var.owner
-  }
 }
 
 
