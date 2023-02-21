@@ -14,6 +14,7 @@ jobs:
       SNYK_IAC_CAPTURE_API_REST_URL: https://api.snyk.io
       SNYK_IAC_CAPTURE_API_REST_TOKEN: ${{ secrets.SNYK_TOKEN }} 
       SNYK_IAC_CAPTURE_ORG: ${{ secrets.SNYK_ORG}}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }} 
         
     #Checkout Code    
     steps:
@@ -56,10 +57,17 @@ jobs:
        curl -sSL -o /usr/local/bin/snyk-iac-capture https://static.snyk.io/cli/iac/capture/v0.1.1/snyk-iac-capture_Linux_x86_64
        chmod +x /usr/local/bin/snyk-iac-capture
 
+    ### Report on IaC
+    - name: Run Snyk Report
+      run : |
+           curl -sSL -o /usr/local/bin/snyk https://static.snyk.io/cli/latest/snyk-linux
+           snyk iac test --report --target-reference=$(git branch --show-current)
+   
+    ### Snyk IaC Capture     
     - name: Snyk IAC Capture
       run: snyk-iac-capture --path tfcloud.tfstate 
 
-  ### Kick off Snyk Cloud Rescan
+    ### Kick off Snyk Cloud Rescan
     - name: Rescan Cloud Environment
       run : |
           curl -X POST \
