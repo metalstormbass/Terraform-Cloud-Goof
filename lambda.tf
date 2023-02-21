@@ -100,9 +100,6 @@ resource "aws_s3_object" "tfgoof_lambda_bucket_object" {
 resource "aws_s3_bucket_acl" "tfgoof_lambda_bucket_acl" {
   bucket = aws_s3_bucket.tfgoof_lambda_bucket.id
   acl    = "private"
-  tags = {
-  Owner = var.owner
-  }
 }
 
 #Lambda Function
@@ -198,9 +195,6 @@ resource "aws_api_gateway_deployment" "tfgoof_apideploy" {
    rest_api_id = aws_api_gateway_rest_api.tfgoof_lambda_apigw.id
    stage_name  = "snyk_goof_${var.victim_company}_lambda"
 
-  tags = {
-  Owner = var.owner
-  }
 }
 
 resource "aws_lambda_permission" "tfgoof_apigw_permission" {
