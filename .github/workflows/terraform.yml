@@ -51,18 +51,18 @@ jobs:
 
 
     ### Snyk iac capture
-     - name: Setup Snyk capture cli
-       shell: bash
-       run: |
-         curl -sSL -o /usr/local/bin/snyk-iac-capture https://static.snyk.io/cli/iac/capture/v0.1.1/snyk-iac-capture_Linux_x86_64
-         chmod +x /usr/local/bin/snyk-iac-capture
+    - name: Setup Snyk capture cli
+      shell: bash
+      run: |
+       curl -sSL -o /usr/local/bin/snyk-iac-capture https://static.snyk.io/cli/iac/capture/v0.1.1/snyk-iac-capture_Linux_x86_64
+       chmod +x /usr/local/bin/snyk-iac-capture
 
-     - name: Snyk IAC Capture
-       run: snyk-iac-capture --path tfcloud.tfstate
+    - name: Snyk IAC Capture
+      run: snyk-iac-capture --path tfcloud.tfstate
 
   ### Kick off Snyk Cloud Rescan
-     - name: Rescan Cloud Environment
-       run : |
+    - name: Rescan Cloud Environment
+      run : |
           curl -X POST \
           'https://api.snyk.io/rest/orgs/5308802e-743b-449b-adde-a1d04befe218/cloud/scans?version=2022-12-21~beta' \
           -H 'Authorization: token ${{ secrets.SNYK_TOKEN }} \
