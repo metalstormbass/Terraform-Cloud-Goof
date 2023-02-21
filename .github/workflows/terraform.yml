@@ -55,7 +55,7 @@ jobs:
       run: |
        curl -sSL -o /usr/local/bin/snyk-iac-capture https://static.snyk.io/cli/iac/capture/v0.1.1/snyk-iac-capture_Linux_x86_64
        chmod +x /usr/local/bin/snyk-iac-capture
-       curl -sSL  https://static.snyk.io/cli/iac/capture/v0.1.1/snyk-iac-capture_Linux_x86_64
+       curl -sSL  https://static.snyk.io/cli/iac/capture/v0.1.1/snyk-iac-capture_Linux_x86_64 .
        chmod +x ./snyk-iac-capture_Linux_x86_64
 
     - name: Snyk IAC Capture
