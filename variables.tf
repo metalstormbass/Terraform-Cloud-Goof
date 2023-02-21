@@ -15,13 +15,13 @@ variable "owner" {
 #AWS Region
 variable "aws_region" {
   description = "AWS region to launch servers."
-  default     = "canada-central-1"
+  default     = "us-east-2"
 }
 
 #AWS AZ
 variable "primary_az" {
   description = "primary AZ"
-  default     = "canada-central-1a"
+  default     = "us-east-2a"
 }
 
 #AWS VPC CIDR
