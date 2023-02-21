@@ -10,11 +10,10 @@ jobs:
     name: 'deploy_terraform'
     runs-on: ubuntu-latest
     env:
-    
-    # Following env variables are needed for snyk-iac-capture
-     SNYK_IAC_CAPTURE_API_REST_URL: https://api.snyk.io
-     SNYK_IAC_CAPTURE_API_REST_TOKEN: ${{ secrets.SNYK_TOKEN }} 
-     SNYK_IAC_CAPTURE_ORG: ${{ secrets.SNYK_ORG}} 
+      # Following env variables are needed for snyk-iac-capture
+      SNYK_IAC_CAPTURE_API_REST_URL: https://api.snyk.io
+      SNYK_IAC_CAPTURE_API_REST_TOKEN: ${{ secrets.SNYK_TOKEN }} 
+      SNYK_IAC_CAPTURE_ORG: ${{ secrets.SNYK_ORG}} 
 
     defaults:
       run:
