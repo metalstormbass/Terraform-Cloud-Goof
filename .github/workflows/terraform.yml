@@ -67,7 +67,7 @@ jobs:
 
     ### Snyk IaC Capture     
     - name: Snyk IAC Capture
-      run: cat tfcloud.tfstate && snyk-iac-capture --path tfcloud.tfstate 
+      run: cp tfcloud.tfstate test.tfstate && snyk-iac-capture --path test.tfstate 
 
     ### Kick off Snyk Cloud Rescan
     - name: Rescan Cloud Environment
