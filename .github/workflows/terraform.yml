@@ -74,14 +74,14 @@ jobs:
     - name: Rescan Cloud Environment
       run : |
           curl -X POST \
-          'https://api.snyk.io/rest/orgs/5308802e-743b-449b-adde-a1d04befe218/cloud/scans?version=2022-12-21~beta' \
+          'https://api.snyk.io/rest/orgs/${{ secrets.SNYK_ORG }}/cloud/scans?version=2022-12-21~beta' \
           -H 'Authorization: token ${{ secrets.SNYK_TOKEN }} \
           -H "Content-Type:application/vnd.api+json"  -d '{
             "data": {
               "relationships": {
                 "environment": {
                   "data": {
-                    "id": "${{ secrets.SNYK_ORG }}",
+                    "id": "${{ secrets.SNYK_CLOUD_ID }}",
                     "type": "environment"
                   }
                 }
