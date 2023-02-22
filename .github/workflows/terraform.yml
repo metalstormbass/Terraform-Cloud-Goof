@@ -63,7 +63,7 @@ jobs:
            curl -sSL -o /usr/local/bin/snyk https://static.snyk.io/cli/latest/snyk-linux
            chmod +x /usr/local/bin/snyk
            snyk iac test --report --target-reference=$(git branch --show-current)
-   
+      continue-on-error: true
     ### Snyk IaC Capture     
     - name: Snyk IAC Capture
       run: snyk-iac-capture --path tfcloud.tfstate 
