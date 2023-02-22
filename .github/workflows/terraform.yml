@@ -48,7 +48,7 @@ jobs:
 
     # Pull Terraform State file for inspection by Snyk
     - name: Terraform state pull
-      run: terraform state pull > tfcloud.tfstate && cat tfcloud.tfstate
+      run: terraform state pull > tfcloud.tfstate 
 
     ### Snyk iac capture
     - name: Setup Snyk capture cli
@@ -64,9 +64,10 @@ jobs:
            chmod +x /usr/local/bin/snyk
            snyk iac test --report --target-reference=$(git branch --show-current)
       continue-on-error: true
+
     ### Snyk IaC Capture     
     - name: Snyk IAC Capture
-      run: snyk-iac-capture --path tfcloud.tfstate 
+      run: cat tfcloud.tfstate && snyk-iac-capture --path tfcloud.tfstate 
 
     ### Kick off Snyk Cloud Rescan
     - name: Rescan Cloud Environment
