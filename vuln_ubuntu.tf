@@ -19,7 +19,7 @@ resource "aws_instance" "vuln_vm" {
         network_interface_id = aws_network_interface.tfgoof-nic.id
   }
   
-  user_data = data.template_file.userdata_setup.rendered
+  user_data =  base64encode(templatefile("vuln_bootstrap.sh"))
   tags = {
    Environment = "DEV"
    Owner = var.owner
