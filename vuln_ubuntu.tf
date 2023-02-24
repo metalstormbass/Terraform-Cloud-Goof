@@ -19,6 +19,27 @@ resource "aws_instance" "vuln_vm" {
   }
 }
 
+# Unecrypted EBS
+resource "aws_ebs_volume" "volume1" {
+    availability_zone = "us-east-1a"
+    size              = 40
+    encrypted         = false
+    tags {
+        #Name = "${var.owner}-volume1"
+        Owner = var.owner
+    }
+}
+
+resource "aws_ebs_snapshot" "snapshot1" {
+    volume_id = "${aws_ebs_volume.volume1.id}"
+
+    tags = {
+        #Name = "${var.owner}-snapshot"
+        Owner = var.owner
+    }
+}
+
+
 output "public_ip" {
   description = "List of public IP addresses assigned to the instances, if applicable"
   value       = aws_instance.vuln_vm.public_ip
