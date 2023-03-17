@@ -1,3 +1,4 @@
+#Define Buckets
 resource "aws_s3_bucket" "exposedbucket" {
   bucket = "${var.victim_company}accidentlyexposed"
 
