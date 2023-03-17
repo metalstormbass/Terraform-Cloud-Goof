@@ -6,7 +6,7 @@ resource "aws_instance" "vuln_vm" {
   ami           = var.ubuntu_ami
   instance_type = "t2.micro"
   key_name = var.key_name
-  https_tokens = required
+ 
   network_interface {
         device_index = 0
         network_interface_id = aws_network_interface.tfgoof-nic.id
@@ -33,7 +33,7 @@ resource "aws_ebs_volume" "volume1" {
 
 resource "aws_ebs_snapshot" "snapshot1" {
     volume_id = "${aws_ebs_volume.volume1.id}"
-    availability_zone = var.primary_az
+  
     tags = {
         Name = "${var.owner}-snapshot"
         Owner = var.owner
