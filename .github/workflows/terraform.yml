@@ -27,6 +27,15 @@ jobs:
             sed -i "/organization/c\   organization\ = \"${{ secrets.TF_ORGANIZATION }}\"" main.tf 
             sed -i "/name/c\   name\ = \"${{ secrets.TF_WORKSPACE }}\"" main.tf
             
+    ### Report on IaC
+    - name: Run Snyk Report
+      run : |
+           curl -sSL -o /usr/local/bin/snyk https://static.snyk.io/cli/latest/snyk-linux
+           chmod +x /usr/local/bin/snyk
+           snyk iac test --report --target-reference=$(git branch --show-current) --org=${{ secrets.SNYK_ORG }}
+      continue-on-error: true
+
+
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
@@ -58,13 +67,6 @@ jobs:
        curl -sSL -o /usr/local/bin/snyk-iac-capture https://static.snyk.io/cli/iac/capture/v0.1.1/snyk-iac-capture_Linux_x86_64
        chmod +x /usr/local/bin/snyk-iac-capture
 
-    ### Report on IaC
-    - name: Run Snyk Report
-      run : |
-           curl -sSL -o /usr/local/bin/snyk https://static.snyk.io/cli/latest/snyk-linux
-           chmod +x /usr/local/bin/snyk
-           snyk iac test --report --target-reference=$(git branch --show-current) --org=${{ secrets.SNYK_ORG }}
-      continue-on-error: true
 
     ### Snyk IaC Capture     
     - name: Snyk IAC Capture

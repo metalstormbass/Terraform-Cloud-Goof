@@ -66,6 +66,7 @@ ingress {
       cidr_blocks = [var.source_ip]
   }
 ingress {
+   #change to port 80 to allow public access
       from_port   = 8000
       to_port     = 8000
       protocol    = "tcp"
