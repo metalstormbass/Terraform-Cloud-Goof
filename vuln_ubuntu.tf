@@ -33,7 +33,7 @@ resource "aws_ebs_volume" "volume1" {
 resource "aws_ebs_snapshot" "snapshot1" {
     volume_id = "${aws_ebs_volume.volume1.id}"
 
-    tags = {
+    tags  {
         #Name = "${var.owner}-snapshot"
         Owner = var.owner
     }
