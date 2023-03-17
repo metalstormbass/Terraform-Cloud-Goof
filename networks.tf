@@ -66,8 +66,8 @@ ingress {
       cidr_blocks = [var.source_ip]
   }
 ingress {
-      from_port   = 80
-      to_port     = 80
+      from_port   = 8000
+      to_port     = 8000
       protocol    = "tcp"
       cidr_blocks = [var.source_ip]
   }
