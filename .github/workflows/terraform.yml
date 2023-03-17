@@ -32,7 +32,7 @@ jobs:
       run : |
            curl -sSL -o /usr/local/bin/snyk https://static.snyk.io/cli/latest/snyk-linux
            chmod +x /usr/local/bin/snyk
-           snyk iac test --report --target-reference=$(git branch --show-current) --org=${{ secrets.SNYK_ORG }}
+           snyk iac test --report --target-reference=$(git branch --show-current) --org=${{ secrets.SNYK_ORG }} -d 
       continue-on-error: true
 
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
