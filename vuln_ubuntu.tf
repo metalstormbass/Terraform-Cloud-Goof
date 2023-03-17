@@ -24,8 +24,8 @@ resource "aws_ebs_volume" "volume1" {
     availability_zone = "us-east-1a"
     size              = 40
     encrypted         = false
-    tags {
-        #Name = "${var.owner}-volume1"
+    tags = {
+        Name = "${var.owner}-volume1"
         Owner = var.owner
     }
 }
@@ -33,8 +33,8 @@ resource "aws_ebs_volume" "volume1" {
 resource "aws_ebs_snapshot" "snapshot1" {
     volume_id = "${aws_ebs_volume.volume1.id}"
 
-    tags  {
-        #Name = "${var.owner}-snapshot"
+    tags = {
+        Name = "${var.owner}-snapshot"
         Owner = var.owner
     }
 }
